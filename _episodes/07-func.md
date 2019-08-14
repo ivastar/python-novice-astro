@@ -146,58 +146,15 @@ or the next person who reads it won't be able to understand what's going on.
 
 Now that we know how to wrap bits of code up in functions,
 we can make our supernova analysis easier to read and easier to reuse.
-First, let's make an `analyze` function that generates our plots:
 
-~~~
-def make_plot(filename):
-
-    data = numpy.loadtxt(fname=filename, delimiter=',', skiprows=1)
-
-    fig = matplotlib.pyplot.figure(figsize=(15.0, 4.0))
-    
-    axes1 = fig.add_subplot(1, 4, 1)
-    axes2 = fig.add_subplot(1, 4, 2)
-    axes3 = fig.add_subplot(1, 4, 3)
-    axes4 = fig.add_subplot(1, 4, 4)
-    
-    y_min = numpy.nanmin(data[:,[1,3,5,7]])
-    y_max = numpy.nanmax(data[:,[1,3,5,7]])
-    
-    mjd = data[:,0]
-
-    axes1.set_xlabel('MJD')
-    axes1.set_ylabel('g')
-    axes1.set_ylim([y_min, y_max])
-    axes1.plot(mjd,data[:,1],'o', color='blue')
-
-    axes2.set_xlabel('MJD')
-    axes2.set_ylabel('r')
-    axes2.set_ylim([y_min, y_max])
-    axes2.plot(mjd,data[:,3],'o', color='green')
-
-    axes3.set_xlabel('MJD')
-    axes3.set_ylabel('i')
-    axes3.set_ylim([y_min, y_max])
-    axes3.plot(mjd,data[:,5],'o', color='yellow')
-
-    axes4.set_xlabel('MJD')
-    axes4.set_ylabel('z')
-    axes4.set_ylim([y_min, y_max])
-    axes4.plot(mjd, data[:,7],'o', color='red')
-
-    #fig.tight_layout()
-    matplotlib.pyplot.show(block=False)
-    matplotlib.pyplot.savefig(filename.replace('.csv','.png'))
-~~~
-{: .language-python}
-
-and another function called `detect_problems` that checks for those systematics
+Let's make a function called `detect_problems` that checks for those systematics
 we noticed:
 
 ~~~
+
 def detect_problems(filename):
 
-    data = numpy.loadtxt(fname=filename, delimiter=',', skiprows=1)
+    data = np.loadtxt(fname=filename, delimiter=',', skiprows=1)
 
     for i in [1,3,5,7]:
         if np.nanmin(data[:,i]) < 0.:
@@ -214,11 +171,12 @@ we can now read and reuse both ideas separately.
 We can reproduce the previous analysis with a much simpler `for` loop:
 
 ~~~
+import glob
+import numpy as np
 filenames = sorted(glob.glob('data/*.csv'))
 
 for f in filenames[:3]:
     print(f)
-    make_plot(f)
     detect_problems(f)
 ~~~
 {: .language-python}
@@ -310,7 +268,7 @@ In fact,
 we can pass the filename to `loadtxt` without the `fname=`:
 
 ~~~
-numpy.loadtxt('data/03D1ar.csv', delimiter=',',skiprows=1)
+np.loadtxt('data/03D1ar.csv', delimiter=',',skiprows=1)
 ~~~
 {: .language-python}
 
@@ -328,7 +286,7 @@ array([[ 0.,  0.,  1., ...,  3.,  0.,  0.],
 but we still need to say `delimiter=`:
 
 ~~~
-numpy.loadtxt('data/03D1ar.csv', ',',1)
+np.loadtxt('data/03D1ar.csv', ',',1)
 ~~~
 {: .language-python}
 
@@ -349,15 +307,15 @@ SyntaxError: unexpected EOF while parsing
 {: .error}
 
 With that in hand,
-let's look at the help for `numpy.loadtxt`:
+let's look at the help for `np.loadtxt`:
 
 ~~~
-help(numpy.loadtxt)
+help(np.loadtxt)
 ~~~
 {: .language-python}
 
 ~~~
-Help on function loadtxt in module numpy.lib.npyio:
+Help on function loadtxt in module np.lib.npyio:
 
 loadtxt(fname, dtype=<class 'float'>, comments='#', delimiter=None, converters=None, skiprows=0, use
 cols=None, unpack=False, ndmin=0, encoding='bytes')
@@ -385,7 +343,7 @@ and eight others that do.
 If we call the function like this:
 
 ~~~
-numpy.loadtxt('data/03D1ar.csv', ',',1)
+np.loadtxt('data/03D1ar.csv', ',',1)
 ~~~
 {: .language-python}
 
@@ -411,7 +369,7 @@ def s(p):
     d = 0
     for v in p:
         d += (v - m) * (v - m)
-    return numpy.sqrt(d / (len(p) - 1))
+    return np.sqrt(d / (len(p) - 1))
 
 def std_dev(sample):
     sample_sum = 0
@@ -424,7 +382,7 @@ def std_dev(sample):
     for value in sample:
         sum_squared_devs += (value - sample_mean) * (value - sample_mean)
 
-    return numpy.sqrt(sum_squared_devs / (len(sample) - 1))
+    return np.sqrt(sum_squared_devs / (len(sample) - 1))
 ~~~
 {: .language-python}
 
@@ -543,8 +501,8 @@ readable code!
 > > ## Solution
 > > ~~~
 > > def rescale(input_array):
-> >     L = numpy.min(input_array)
-> >     H = numpy.max(input_array)
+> >     L = np.min(input_array)
+> >     H = np.max(input_array)
 > >     output_array = (input_array - L) / (H - L)
 > >     return output_array
 > > ~~~
@@ -554,7 +512,7 @@ readable code!
 
 > ## Testing and Documenting Your Function
 >
-> Run the commands `help(numpy.arange)` and `help(numpy.linspace)`
+> Run the commands `help(np.arange)` and `help(np.linspace)`
 > to see how to use these functions to generate regularly-spaced values,
 > then use those values to test your `rescale` function.
 > Once you've successfully tested your function,
@@ -566,10 +524,10 @@ readable code!
 > > that 0 corresponds to the minimum and 1 to the maximum value of the input array.
 > >
 > > Examples:
-> > >>> rescale(numpy.arange(10.0))
+> > >>> rescale(np.arange(10.0))
 > > array([ 0.        ,  0.11111111,  0.22222222,  0.33333333,  0.44444444,
 > >        0.55555556,  0.66666667,  0.77777778,  0.88888889,  1.        ])
-> > >>> rescale(numpy.linspace(0, 100, 5))
+> > >>> rescale(np.linspace(0, 100, 5))
 > > array([ 0.  ,  0.25,  0.5 ,  0.75,  1.  ])
 > > '''
 > > ~~~
@@ -588,8 +546,8 @@ readable code!
 > > ~~~
 > > def rescale(input_array, low_val=0.0, high_val=1.0):
 > >     '''rescales input array values to lie between low_val and high_val'''
-> >     L = numpy.min(input_array)
-> >     H = numpy.max(input_array)
+> >     L = np.min(input_array)
+> >     H = np.max(input_array)
 > >     intermed_array = (input_array - L) / (H - L)
 > >     output_array = intermed_array * (high_val - low_val) + low_val
 > >     return output_array

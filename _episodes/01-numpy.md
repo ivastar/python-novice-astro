@@ -489,7 +489,7 @@ print('small is:')
 print(small)
 ~~~
 {: .language-python}
-The above example selects rows 0 through 2 and columns 36 through to the end of the array.
+The above example selects rows 0 through 2 and columns 7 through to the end of the array.
 
 ~~~
 small is:
@@ -513,9 +513,9 @@ each element of which is twice the value of the corresponding element in `data`:
 
 ~~~
 print('original:')
-print(data[:3, 36:])
+print(data[:3, 7:])
 print('doubledata:')
-print(doubledata[:3, 36:])
+print(doubledata[:3, 7:])
 ~~~
 {: .language-python}
 
@@ -545,7 +545,7 @@ and so on for all other elements of the arrays.
 
 ~~~
 print('tripledata:')
-print(tripledata[:3, 36:])
+print(tripledata[:3, 7:])
 ~~~
 {: .language-python}
 

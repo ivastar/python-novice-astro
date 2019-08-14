@@ -143,7 +143,7 @@ Therefore, if you're working in a new Python session, make sure to load the
 module with:
 
 ~~~
-import numpy
+import numpy as np
 ~~~
 {: .language-python}
 
@@ -178,13 +178,14 @@ else:
 Let's test that out:
 
 ~~~
-data = numpy.loadtxt(fname='data/03D3af.csv', delimiter=',', skiprows=1)
+f1 = 'data/03D3af.csv'
+data = np.loadtxt(fname=f1, delimiter=',', skiprows=1)
 
 
 if np.nanmin(data[:,1]) < 0.:
-    print(f + ': a negative flux')
+    print(f1 + ': a negative flux')
 elif np.sum(np.isnan(data[:,1])) == data.shape[0]:
-    print(f + ': a NaN column')
+    print(f1 + ': a NaN column')
 else:
     print('Seems OK!')
 ~~~
@@ -196,7 +197,8 @@ data/03D3af.csv: A NaN column
 {: .output}
 
 ~~~
-data = numpy.loadtxt(fname='data/03D1ar.csv', delimiter=',')
+f2 = 'data/03D1ar.csv'
+data = np.loadtxt(fname=f2, delimiter=',')
 
 if np.nanmin(data[:,1]) < 0.:
     print(f + ': a negative flux')
@@ -211,6 +213,30 @@ else:
 data/03D1ar.csv: A negative flux.
 ~~~
 {: .output}
+
+Or even check both with a loop : 
+
+~~~
+files = [f1, f2]
+
+for file in files:
+    if np.nanmin(data[:1]) < 0:
+        print(file + ': a negative flux')
+    elif np.sum(np.isnan(data[:1])) == data.shape[0]:
+        print(file + ': a NaN column')
+    else:
+        print(file + ' seems OK!')
+~~~
+{: .language-python}
+
+~~~
+data/03D3af.csv: A NaN column
+data/03D1ar.csv: A negative flux.
+~~~
+{: .output}
+
+
+
 
 In this way,
 we have asked Python to do something different depending on the condition of our data.

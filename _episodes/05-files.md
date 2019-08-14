@@ -49,7 +49,6 @@ If we want to start by analyzing just the first three files in alphabetical orde
 
 ~~~
 import numpy
-import matplotlib.pyplot
 import glob
 
 filenames = sorted(glob.glob('data/*.csv'))
@@ -76,6 +75,30 @@ data/03D1aw.csv
 data/03D1aw.csv Min brightness:  -16.833 Max brightness:  956.81
 ~~~
 {: .output}
+
+You could also use this loop to plot each figure :
+
+~~~
+import matplotlib.pyplot
+
+filenames = sorted(glob.glob('data/*.csv'))
+filenames = filenames[0:3]
+for f in filenames:
+
+    print('Plotting {}...'.format(f))
+
+    data = numpy.loadtxt(fname=f, delimiter=',', skiprows=1)
+    col1 = data[:, 1]
+    col3 = data[:, 3]
+
+    plt.scatter(col1, col2, color='blue', alpha=.5)
+    plt.xlabel('Column 1')
+    plt.ylabel('Column 2')
+    plt.title('Col 1 vs 2 for {}'.format(f))
+    plt.show()
+    plt.clf()
+~~~
+
 
 
 > ## Plotting Differences (DO NOT USE)
