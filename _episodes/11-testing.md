@@ -134,7 +134,7 @@ Test it? Python does not like to compare one NaN to another NaN. So instead we n
 import numpy as np
 def test_add_nan():
   results = add(2, np.nan)
-  assert np.isnan(result)
+  assert np.isnan(results)
 ~~~
 {: .language-python}  
 
